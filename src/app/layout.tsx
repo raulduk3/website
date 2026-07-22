@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import  localFont from "next/font/local";
+import Link from "next/link";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
 
@@ -95,8 +96,10 @@ export default function RootLayout({
         <div className="flex-1 flex flex-col justify-center items-center w-full px-4"> 
           {children}
         </div>
-        <footer className="py-6 text-center italic text-white text-xs">
+        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-6 text-center text-xs text-white/70">
           <p>Richard Alvarez © {new Date().getFullYear()}</p>
+          <Link href="/privacy" className="hover:text-white">Privacy</Link>
+          <Link href="/terms" className="hover:text-white">Terms</Link>
         </footer>
         <Analytics />
       </body>

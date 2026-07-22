@@ -1,27 +1,12 @@
-PRIVACY POLICY
-	1.	Overview
-This site operates as an informational platform; it collects minimal data; it accepts no duty to safeguard any information beyond what is strictly required by law. By using the site you consent to this policy in full.
-	2.	Information Collected
-The site may automatically record non identifiable technical data such as browser type; IP address; timestamps; and general usage metrics. Any personally identifiable information you choose to submit is provided at your own discretion and risk.
-	3.	Use of Information
-Information may be used for analytics; security review; troubleshooting; and basic site functionality. No guarantees exist regarding retention limits; deletion schedules; or data handling outcomes.
-	4.	Cookies
-The site may deploy cookies or similar tracking technologies for functionality or analytics. You may disable them through your browser; any resulting malfunction is your responsibility.
-	5.	Third Party Services
-This site may interface with external vendors; analytics providers; or embedded services. These third parties operate under their own policies; they assume no liability for this site; and this site assumes no liability for them.
-	6.	Data Sharing
-The site does not sell your PII; however it may disclose information if compelled by law; if required for site maintenance; or if technically unavoidable. No warranties exist that information will remain private in all circumstances.
-	7.	No Warranty; No Responsibility
-This site provides no warranty of confidentiality; accuracy; security; or protection. All information you submit is at your sole risk. You agree that the site owner holds zero responsibility for any breach; exposure; loss; misuse; or unauthorized access of your data.
-	8.	User Responsibilities
-You are responsible for safeguarding your own devices; network; authentication methods; and submitted content. You bear complete responsibility for verifying the safety of any information you provide.
-	9.	Data Rights
-Where legally mandated you may request access or deletion of PII. The site reserves the right to deny requests when permitted by law; to delay responses; or to decline action when the identity of the requester cannot be verified.
-	10.	Children
-This site does not knowingly collect PII from individuals under applicable age-of-consent laws. If such data is discovered it may be removed without notice.
-	11.	International Visitors
-If you access the site from outside the United States you consent to processing under United States laws; which may provide fewer data rights than those in your jurisdiction.
-	12.	Changes to This Policy
-The site may modify this policy at any time without notice. Continued use after changes signifies acceptance.
-	13.	Contact
-For inquiries regarding this policy contact the site owner through the designated communication channel on the site.
+FABLE TRADER PRIVACY POLICY
+
+The current privacy policy for the Fable Trader conversational messaging program is available at:
+
+https://richardalvarez.info/privacy
+
+Fable Trader does not sell, rent, or share mobile numbers, SMS opt-in data, or consent records with
+third parties or affiliates for marketing or promotional purposes. Message frequency varies.
+Message and data rates may apply. Text STOP to opt out or HELP for assistance.
+
+Contact: rawalvarez731@gmail.com
+Last updated: July 22, 2026
