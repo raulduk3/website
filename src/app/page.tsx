@@ -36,6 +36,12 @@ export default function HomePage() {
             >
               → resume
             </Link>
+            <Link
+              href="/chicago-dream.html"
+              className="no-underline text-orange hover:text-white font-medium"
+            >
+              → CHICAGO DREAM screenplay
+            </Link>
           </div>
         </div>
       </section>
