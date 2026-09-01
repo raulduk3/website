@@ -36,6 +36,12 @@ export default function HomePage() {
             >
               → resume
             </Link>
+            <Link
+              href="/Richard_Alvarez_CV.pdf"
+              className="no-underline text-orange hover:text-white font-medium"
+            >
+              → academic CV
+            </Link>
           </div>
         </div>
       </section>
