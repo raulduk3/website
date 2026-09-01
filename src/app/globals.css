@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  height: 100%;
+html {
   min-height: 100%;
-  background: #F4FFFD; /* Clean dark background, change if you prefer light */
+  background: #010F7F;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background: #010F7F;
   color: #21221B;
   font-family: 'Inter', system-ui, sans-serif;
   user-select: none;
