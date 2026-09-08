@@ -95,7 +95,7 @@ export default function RootLayout({
         <div className="flex-1 flex flex-col justify-center items-center w-full px-4"> 
           {children}
         </div>
-        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-6 text-center text-sm text-muted">
+        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-6 py-4 text-center text-sm text-muted">
           <p>Richard Alvarez © {new Date().getFullYear()}</p>
         </footer>
         <Analytics />

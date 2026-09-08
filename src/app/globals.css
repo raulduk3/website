@@ -14,8 +14,8 @@ body {
   margin: 0;
   background: #f5f2e9;
   color: #292923;
-  font-size: 18px;
-  line-height: 1.75;
+  font-size: clamp(17px, 16px + 0.25vw, 18px);
+  line-height: 1.6;
 }
 
 ::selection {
