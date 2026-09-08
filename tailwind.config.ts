@@ -9,9 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        white: '#F4FFFD',
-        black: '#010F7F',
-        orange: '#FFFB1A',
+        paper: '#f5f2e9',
+        ink: '#292923',
+        muted: '#626158',
+        rule: '#d5d0c4',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -20,31 +21,31 @@ const config: Config = {
       typography: (theme: any) => ({
         DEFAULT: {
           css: {
-            color: theme('colors.white'),
+            color: theme('colors.ink'),
             a: {
-              color: theme('colors.orange'),
+              color: theme('colors.ink'),
               '&:hover': {
-                color: theme('colors.white'),
+                color: theme('colors.ink'),
               },
             },
             h1: {
-              color: theme('colors.white'),
+              color: theme('colors.ink'),
               fontWeight: 'bold',
               fontSize: '2rem',
               marginBottom: '1rem',
             },
             h2: {
-              color: theme('colors.white'),
+              color: theme('colors.ink'),
               fontSize: '1.5rem',
               marginBottom: '0.75rem',
             },
             h3: {
-              color: theme('colors.white'),
+              color: theme('colors.ink'),
               fontSize: '1.25rem',
               marginBottom: '0.5rem',
             },
             p: {
-              color: theme('colors.white'),
+              color: theme('colors.ink'),
               marginBottom: '1.25rem',
               lineHeight: '1.75',
             },
