@@ -1,8 +1,10 @@
 // src/app/page.tsx
 import Link from "next/link";
+import LivingPaper from "../components/LivingPaper";
 
 export default function HomePage() {
   return (
+    <LivingPaper>
     <main className="flex flex-col items-center justify-center w-full">
       <section className="w-full max-w-xl px-2 py-8 sm:px-8 sm:py-10 flex flex-col items-center">
         <div className="w-full border-b border-rule pb-3 mb-3 sm:pb-4 sm:mb-4">
@@ -46,5 +48,6 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+    </LivingPaper>
   );
 }
