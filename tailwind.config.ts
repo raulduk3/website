@@ -9,10 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: '#f5f2e9',
-        ink: '#292923',
-        muted: '#626158',
-        rule: '#d5d0c4',
+        // Palette: https://coolors.co/50723c-262626-fffded-df4800-255c99
+        paper: '#fffded',   // ground
+        ink: '#262626',     // name and body copy
+        muted: '#50723c',   // secondary voice: tagline, labels, footer
+        link: '#255c99',    // links at rest
+        accent: '#df4800',  // marks only: arrows, hover underline, focus ring
+        rule: '#d4d2c5',    // ink at 20% over paper
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -23,9 +26,10 @@ const config: Config = {
           css: {
             color: theme('colors.ink'),
             a: {
-              color: theme('colors.ink'),
+              color: theme('colors.link'),
               '&:hover': {
-                color: theme('colors.ink'),
+                color: theme('colors.link'),
+                textDecorationColor: theme('colors.accent'),
               },
             },
             h1: {

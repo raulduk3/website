@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --paper: #fffded;
+  --ink: #262626;
+  --muted: #50723c;
+  --link: #255c99;
+  --accent: #df4800;
+  --selection: #f8d5b9; /* accent at 22% over paper */
+}
+
 html {
   min-height: 100%;
-  background: #f5f2e9;
+  background: var(--paper);
   color-scheme: light;
 }
 
@@ -12,18 +21,19 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   margin: 0;
-  background: #f5f2e9;
-  color: #292923;
+  background: var(--paper);
+  color: var(--ink);
   font-size: clamp(17px, 16px + 0.25vw, 18px);
   line-height: 1.6;
 }
 
 ::selection {
-  background: #ded9cb;
-  color: #292923;
+  background: var(--selection);
+  color: var(--ink);
 }
 
 a {
+  color: var(--link);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
@@ -31,10 +41,11 @@ a {
 
 a:hover {
   text-decoration-thickness: 2px;
+  text-decoration-color: var(--accent);
 }
 
 a:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--accent);
   outline-offset: 5px;
   border-radius: 2px;
 }
@@ -66,7 +77,7 @@ footer {
   text-align: center;
   font-size: 12px;
   line-height: 1.5;
-  color: #626158;
+  color: var(--muted);
 }
 
 .tilt-control button {
@@ -76,7 +87,7 @@ footer {
 }
 
 .tilt-control button:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 

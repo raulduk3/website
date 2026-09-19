@@ -28,21 +28,21 @@ export default function HomePage() {
             </p>
             <Link
               href="mailto:rawalvarez731@gmail.com"
-              className="w-fit text-ink font-normal leading-normal py-1"
+              className="w-fit text-link font-normal leading-normal py-1"
             >
-              → email
+              <span className="text-accent" aria-hidden="true">→</span> email
             </Link>
             <Link
               href="/Richard_Alvarez_Resume.pdf"
-              className="w-fit text-ink font-normal leading-normal py-1"
+              className="w-fit text-link font-normal leading-normal py-1"
             >
-              → resume
+              <span className="text-accent" aria-hidden="true">→</span> resume
             </Link>
             <Link
               href="/Richard_Alvarez_CV.pdf"
-              className="w-fit text-ink font-normal leading-normal py-1"
+              className="w-fit text-link font-normal leading-normal py-1"
             >
-              → academic CV
+              <span className="text-accent" aria-hidden="true">→</span> academic CV
             </Link>
           </div>
         </div>

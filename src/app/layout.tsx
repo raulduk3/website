@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import  localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
@@ -79,6 +79,10 @@ export const metadata: Metadata = {
   icons: [
     { rel: 'icon', href: '/favicon.ico', url: '/favicon.ico' },
   ],
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fffded",
 };
 
 export default function RootLayout({
