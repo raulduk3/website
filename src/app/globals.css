@@ -24,13 +24,11 @@ body {
 }
 
 a {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.22em;
+  text-decoration: none;
 }
 
 a:hover {
-  text-decoration-thickness: 2px;
+  color: #626158;
 }
 
 a:focus-visible,
@@ -110,8 +108,6 @@ summary:focus-visible {
 .copy-email button {
   min-height: 44px;
   text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 0.22em;
 }
 
 .copy-email button:disabled {
@@ -154,8 +150,11 @@ footer {
 .background-control button {
   min-height: 44px;
   padding: 8px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+}
+
+.copy-email button:hover,
+.background-control button:hover {
+  color: #292923;
 }
 
 @media (prefers-reduced-motion: reduce) {
