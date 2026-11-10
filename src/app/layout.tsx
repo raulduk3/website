@@ -1,84 +1,48 @@
 import type { Metadata } from "next";
-import  localFont from "next/font/local";
+import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
 
 const avenir = localFont({
-  src: [
-    { path: '../../public/fonts/Avenir-Black-03.ttf', weight: '900', style: 'normal' },
-    { path: '../../public/fonts/Avenir-BlackOblique-04.ttf', weight: '900', style: 'italic' },
-    { path: '../../public/fonts/Avenir-Book-01.ttf', weight: '400', style: 'normal' },
-    { path: '../../public/fonts/Avenir-BookOblique-02.ttf', weight: '400', style: 'italic' },
-    { path: '../../public/fonts/Avenir-Heavy-05.ttf', weight: '700', style: 'normal' },
-    { path: '../../public/fonts/Avenir-HeavyOblique-06.ttf', weight: '700', style: 'italic' },
-    { path: '../../public/fonts/Avenir-Light-07.ttf', weight: '300', style: 'normal' },
-    { path: '../../public/fonts/Avenir-LightOblique-08.ttf', weight: '300', style: 'italic' },
-    { path: '../../public/fonts/Avenir-Medium-09.ttf', weight: '500', style: 'normal' },
-    { path: '../../public/fonts/Avenir-MediumOblique-10.ttf', weight: '500', style: 'italic' },
-    { path: '../../public/fonts/Avenir-Oblique-11.ttf', weight: '400', style: 'italic' },
-    { path: '../../public/fonts/Avenir-Roman-12.ttf', weight: '400', style: 'normal' },
-  ],
-  variable: '--font-avenir',
+  src: [{ path: "../../public/fonts/Avenir-Roman-12.ttf", weight: "400", style: "normal" }],
+  variable: "--font-avenir",
 });
 
+const description = "Richard Álvarez is a web developer and AI engineer based in Chicago. Selected websites and contact details.";
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | richard alvarez',
-    default: 'richard alvarez',
+    template: "%s | Richard Álvarez",
+    default: "Richard Álvarez | Web Developer & AI Engineer",
   },
-  description: 'Artist website of Richard Álvarez.',
-  keywords: [
-    'Rick Alvarez',
-    'rick alvarez chicago',
-    'Alvarez',
-    'dvi',
-    'canon xl2',
-    'Canon XL2',
-    'glitch art',
-    'raul duke',
-    'Raoul Duke',
-    'Raul Duke',
-    'underground artist',
-    'vfx',
-    'chicago',
-    'music scene',
-    'music videos',
-    'art',
-    'poetry',
-    'latinx art',
-    'video art',
-    'code',
-    'programming',
-    'p5js',
-    'chicago underground artists',
-    'cgi',
-    'animation',
-    'punk art',
-    'youtube music videos',
-    'nudity in music videos',
-    'chicago underground film festival',
-  ],
+  description,
+  keywords: ["Richard Álvarez", "web developer", "AI engineer", "Chicago", "websites"],
+  metadataBase: new URL("https://richardalvarez.info"),
+  alternates: { canonical: "/" },
   openGraph: {
-    siteName: 'richardalvarez.info',
-    title: 'Richard Alvarez',
-    description: 'Artist website of Richard Álvarez.',
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://richardalvarez.info',
+    siteName: "richardalvarez.info",
+    title: "Richard Álvarez | Web Developer & AI Engineer",
+    description,
+    type: "website",
+    locale: "en_US",
+    url: "https://richardalvarez.info",
     images: [
       {
-        url: 'https://richardalvarez.info/og-image.jpg',
-        width: 800,
-        height: 650,
-        alt: 'Richard Alvarez',
+        url: "/og-image.jpg",
+        width: 2048,
+        height: 1152,
+        alt: "Richard Álvarez",
       },
     ],
   },
-  metadataBase: new URL('https://richardalvarez.info'),
-  icons: [
-    { rel: 'icon', href: '/favicon.ico', url: '/favicon.ico' },
-  ],
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -88,11 +52,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </head>
       <body className={avenir.className + " flex flex-col bg-paper text-ink min-h-[100svh]"}>
-        <div className="flex-1 flex flex-col justify-center items-center w-full px-4"> 
+        <a href="#main-content" className="skip-link">Skip to content</a>
+        <div className="flex-1 flex flex-col justify-center items-center w-full px-4">
           {children}
         </div>
         <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-6 py-4 text-center text-sm text-muted">

@@ -33,12 +33,94 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
-a:focus-visible {
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 5px;
   border-radius: 2px;
 }
 
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  padding: 8px 12px;
+  background: #f5f2e9;
+  transform: translateY(calc(-100% - 20px));
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.project-list {
+  display: grid;
+  gap: 12px;
+}
+
+.project-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 12px;
+}
+
+.project-link,
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.project-link {
+  gap: 0.3em;
+}
+
+.contact-link {
+  display: block;
+  padding-block: 8px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.project-status,
+.project-description,
+.project-disclosure,
+.copy-email {
+  color: #626158;
+  font-size: 0.875em;
+}
+
+.project-disclosure summary {
+  width: fit-content;
+  min-height: 44px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+
+.project-preview {
+  width: 100%;
+  height: auto;
+  margin-block: 4px 12px;
+  border: 1px solid #ded9cb;
+}
+
+.copy-email button {
+  min-height: 44px;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+
+.copy-email button:disabled {
+  cursor: wait;
+}
+
+.copy-email p:not(:empty) {
+  margin-bottom: 8px;
+}
 
 .living-paper {
   position: fixed;
@@ -60,7 +142,7 @@ footer {
   z-index: 1;
 }
 
-.tilt-control {
+.background-control {
   position: relative;
   z-index: 1;
   text-align: center;
@@ -69,18 +151,13 @@ footer {
   color: #626158;
 }
 
-.tilt-control button {
-  padding: 6px 8px;
+.background-control button {
+  min-height: 44px;
+  padding: 8px;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.tilt-control button:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .living-paper, .tilt-control { display: none; }
-  .living-content { transform: none !important; }
+  .living-paper, .background-control { display: none; }
 }

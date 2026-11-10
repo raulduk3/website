@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
   content: [
@@ -18,7 +19,7 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      typography: (theme: any) => ({
+      typography: ({ theme }: { theme: (path: string) => string }) => ({
         DEFAULT: {
           css: {
             color: theme('colors.ink'),
@@ -72,7 +73,7 @@ const config: Config = {
       }),
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typography],
 };
 
 export default config;

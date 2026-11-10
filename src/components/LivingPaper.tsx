@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-type MotionEventConstructor = typeof DeviceOrientationEvent & {
-  requestPermission?: () => Promise<string>;
-};
+type BackgroundState = "loading" | "running" | "paused" | "static";
 
 const fragmentShader = `
   precision highp float;
@@ -27,7 +25,6 @@ const fragmentShader = `
     p += uDirection * 0.045;
     float drift = noise(p * 2.4 + vec2(uTime * 0.018, uTime * -0.012));
     float fibers = noise(p * vec2(105.0, 7.0) + drift * 0.35);
-    // Grain stays anchored: no sparkling or frame-to-frame random noise.
     float grain = hash(floor(gl_FragCoord.xy));
     float opacity = 0.005 + drift * 0.020 + fibers * 0.005 + grain * 0.006;
     gl_FragColor = vec4(0.23, 0.21, 0.17, opacity);
@@ -36,28 +33,29 @@ const fragmentShader = `
 
 export default function LivingPaper({ children }: { children: ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [offerTilt, setOfferTilt] = useState(false);
-  const [tiltStatus, setTiltStatus] = useState("");
+  const togglePlayback = useRef<(() => void) | null>(null);
+  const [background, setBackground] = useState<BackgroundState>("loading");
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const content = contentRef.current;
-    if (!canvas || !content) return;
+    if (!canvas) return;
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     let dispose: (() => void) | undefined;
     let generation = 0;
+    let paused = false;
 
     const configure = async () => {
       const currentGeneration = ++generation;
       dispose?.();
       dispose = undefined;
-      setOfferTilt(false);
-      content.style.transform = "";
-      if (motion.matches) return;
+      togglePlayback.current = null;
+      setBackground("loading");
+      if (motion.matches) {
+        setBackground("static");
+        return;
+      }
 
       try {
-        // Keep the reading content server-rendered; load WebGL after hydration.
         const THREE = await import("three");
         if (generation !== currentGeneration) return;
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "low-power" });
@@ -78,36 +76,26 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
         scene.add(new THREE.Mesh(geometry, material));
         const target = new THREE.Vector2();
         const direction = new THREE.Vector2();
-        const clamp = (n: number) => Math.max(-1, Math.min(1, n));
-        let baseline: { beta: number; gamma: number } | null = null;
+        const clamp = (value: number) => Math.max(-1, Math.min(1, value));
         let frame = 0;
         let last = 0;
         let elapsed = 0;
-        let running = true;
+        let active = true;
 
         const resize = () => {
-          // Limit fill rate on high-density and large displays.
           const ratio = Math.min(devicePixelRatio || 1, 1.5, Math.sqrt(2000000 / (innerWidth * innerHeight)));
           renderer.setPixelRatio(ratio);
           renderer.setSize(innerWidth, innerHeight, false);
           renderer.getDrawingBufferSize(uniforms.uResolution.value);
+          renderer.render(scene, camera);
         };
         const pointer = (event: PointerEvent) => {
-          if (event.pointerType === "touch") return;
+          if (event.pointerType === "touch" || paused || document.hidden) return;
           target.set(clamp(event.clientX / innerWidth * 2 - 1), clamp(event.clientY / innerHeight * 2 - 1));
         };
         const neutral = () => { target.set(0, 0); };
-        const orientation = (event: DeviceOrientationEvent) => {
-          if (event.beta === null || event.gamma === null || !Number.isFinite(event.beta) || !Number.isFinite(event.gamma)) return;
-          if (!baseline) baseline = { beta: event.beta, gamma: event.gamma };
-          const angle = (screen.orientation?.angle ?? 0) * Math.PI / 180;
-          const x = clamp((event.gamma - baseline.gamma) / 25);
-          const y = clamp((event.beta - baseline.beta) / 25);
-          target.set(clamp(x * Math.cos(angle) + y * Math.sin(angle)), clamp(y * Math.cos(angle) - x * Math.sin(angle)));
-        };
-        const resetOrientation = () => { baseline = null; neutral(); };
         const tick = (now: number) => {
-          if (!running || document.hidden) return;
+          if (!active || paused || document.hidden) return;
           frame = requestAnimationFrame(tick);
           if (last && now - last < 1000 / 30) return;
           const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
@@ -116,85 +104,80 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
           direction.lerp(target, 1 - Math.exp(-dt * 3));
           uniforms.uDirection.value.copy(direction);
           uniforms.uTime.value = elapsed;
-          // Move the complete reading block as one plane, with less than half a degree of tilt.
-          content.style.transform = `perspective(1400px) translate(${(direction.x * 2.5).toFixed(3)}px, ${(direction.y * 2.5).toFixed(3)}px) rotateX(${(-direction.y * 0.45).toFixed(3)}deg) rotateY(${(direction.x * 0.45).toFixed(3)}deg)`;
           renderer.render(scene, camera);
         };
-        const visibility = () => {
+        const updatePlayback = () => {
           cancelAnimationFrame(frame);
           last = 0;
-          resetOrientation();
-          if (!document.hidden && running) frame = requestAnimationFrame(tick);
+          if (active && !paused && !document.hidden) frame = requestAnimationFrame(tick);
+        };
+        const visibility = () => {
+          neutral();
+          updatePlayback();
         };
         const contextLost = (event: Event) => {
           event.preventDefault();
-          running = false;
-          cancelAnimationFrame(frame);
-          content.style.transform = "";
-          setOfferTilt(false);
+          dispose?.();
+          dispose = undefined;
+          togglePlayback.current = null;
+          setBackground("static");
         };
         dispose = () => {
-          running = false;
+          active = false;
           cancelAnimationFrame(frame);
           window.removeEventListener("resize", resize);
           window.removeEventListener("pointermove", pointer);
           document.documentElement.removeEventListener("pointerleave", neutral);
           window.removeEventListener("blur", neutral);
-          window.removeEventListener("deviceorientation", orientation);
-          window.removeEventListener("orientationchange", resetOrientation);
           document.removeEventListener("visibilitychange", visibility);
           canvas.removeEventListener("webglcontextlost", contextLost);
-          renderer.clear();
           geometry.dispose();
           material.dispose();
           renderer.dispose();
-          content.style.transform = "";
         };
         resize();
         window.addEventListener("resize", resize);
         window.addEventListener("pointermove", pointer, { passive: true });
         document.documentElement.addEventListener("pointerleave", neutral);
         window.addEventListener("blur", neutral);
-        window.addEventListener("deviceorientation", orientation, { passive: true });
-        window.addEventListener("orientationchange", resetOrientation);
         document.addEventListener("visibilitychange", visibility);
         canvas.addEventListener("webglcontextlost", contextLost);
-        const sensor = window.DeviceOrientationEvent as MotionEventConstructor | undefined;
-        setOfferTilt(Boolean(sensor?.requestPermission && matchMedia("(pointer: coarse)").matches));
-        if (!document.hidden) frame = requestAnimationFrame(tick);
+        togglePlayback.current = () => {
+          paused = !paused;
+          setBackground(paused ? "paused" : "running");
+          updatePlayback();
+        };
+        setBackground(paused ? "paused" : "running");
+        updatePlayback();
       } catch {
-        // A plain paper background remains fully usable without WebGL.
+        if (generation !== currentGeneration) return;
         dispose?.();
         dispose = undefined;
+        togglePlayback.current = null;
+        setBackground("static");
       }
     };
+    const motionChange = () => { void configure(); };
     void configure();
-    motion.addEventListener("change", configure);
+    motion.addEventListener("change", motionChange);
     return () => {
       generation++;
-      motion.removeEventListener("change", configure);
+      motion.removeEventListener("change", motionChange);
+      togglePlayback.current = null;
       dispose?.();
     };
   }, []);
 
-  const enableTilt = async () => {
-    try {
-      const sensor = window.DeviceOrientationEvent as MotionEventConstructor;
-      const permission = await sensor.requestPermission?.();
-      setTiltStatus(permission === "granted" ? "Tilt enabled" : "Tilt stays off");
-    } catch {
-      setTiltStatus("Tilt unavailable");
-    }
-    setOfferTilt(false);
-  };
-
   return (
     <>
       <canvas ref={canvasRef} className="living-paper" aria-hidden="true" />
-      <div ref={contentRef} className="living-content">{children}</div>
-      <div className="tilt-control">
-        {offerTilt && <button type="button" onClick={enableTilt}>Enable gentle tilt</button>}
-        <span role="status" className="sr-only">{tiltStatus}</span>
+      <div className="living-content">{children}</div>
+      <div className="background-control">
+        {(background === "running" || background === "paused") && (
+          <button type="button" onClick={() => togglePlayback.current?.()}>
+            {background === "paused" ? "Resume background" : "Pause background"}
+          </button>
+        )}
       </div>
     </>
   );
