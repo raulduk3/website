@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-
-type BackgroundState = "loading" | "running" | "paused" | "static";
+import { useEffect, useRef, type ReactNode } from "react";
 
 const fragmentShader = `
   precision highp float;
@@ -22,19 +20,21 @@ const fragmentShader = `
   }
   void main() {
     vec2 p = gl_FragCoord.xy / uResolution.y;
-    p += uDirection * 0.045;
-    float drift = noise(p * 2.4 + vec2(uTime * 0.018, uTime * -0.012));
-    float fibers = noise(p * vec2(105.0, 7.0) + drift * 0.35);
+    vec2 lightPosition = p * 1.55 + uDirection * 0.38;
+    lightPosition += vec2(uTime * 0.11, uTime * -0.07);
+    float wash = noise(lightPosition);
+    float shadow = 0.5 + 0.5 * sin(p.x * 2.1 + p.y * 1.35
+      + wash * 0.8 + uTime * 0.35 + dot(uDirection, vec2(0.8, -0.6)));
+    float fibers = noise(p * vec2(105.0, 7.0));
     float grain = hash(floor(gl_FragCoord.xy));
-    float opacity = 0.005 + drift * 0.020 + fibers * 0.005 + grain * 0.006;
+    float opacity = min(0.084, 0.008 + wash * 0.036 + shadow * 0.026
+      + fibers * 0.008 + grain * 0.006);
     gl_FragColor = vec4(0.23, 0.21, 0.17, opacity);
   }
 `;
 
 export default function LivingPaper({ children }: { children: ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const togglePlayback = useRef<(() => void) | null>(null);
-  const [background, setBackground] = useState<BackgroundState>("loading");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -42,18 +42,12 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     let dispose: (() => void) | undefined;
     let generation = 0;
-    let paused = false;
 
     const configure = async () => {
       const currentGeneration = ++generation;
       dispose?.();
       dispose = undefined;
-      togglePlayback.current = null;
-      setBackground("loading");
-      if (motion.matches) {
-        setBackground("static");
-        return;
-      }
+      if (motion.matches) return;
 
       try {
         const THREE = await import("three");
@@ -90,37 +84,32 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
           renderer.render(scene, camera);
         };
         const pointer = (event: PointerEvent) => {
-          if (event.pointerType === "touch" || paused || document.hidden) return;
+          if (event.pointerType === "touch" || document.hidden) return;
           target.set(clamp(event.clientX / innerWidth * 2 - 1), clamp(event.clientY / innerHeight * 2 - 1));
         };
         const neutral = () => { target.set(0, 0); };
         const tick = (now: number) => {
-          if (!active || paused || document.hidden) return;
+          if (!active || document.hidden) return;
           frame = requestAnimationFrame(tick);
           if (last && now - last < 1000 / 30) return;
           const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
           last = now;
           elapsed += dt;
-          direction.lerp(target, 1 - Math.exp(-dt * 3));
+          direction.lerp(target, 1 - Math.exp(-dt * 4));
           uniforms.uDirection.value.copy(direction);
           uniforms.uTime.value = elapsed;
           renderer.render(scene, camera);
         };
-        const updatePlayback = () => {
+        const visibility = () => {
           cancelAnimationFrame(frame);
           last = 0;
-          if (active && !paused && !document.hidden) frame = requestAnimationFrame(tick);
-        };
-        const visibility = () => {
           neutral();
-          updatePlayback();
+          if (active && !document.hidden) frame = requestAnimationFrame(tick);
         };
         const contextLost = (event: Event) => {
           event.preventDefault();
           dispose?.();
           dispose = undefined;
-          togglePlayback.current = null;
-          setBackground("static");
         };
         dispose = () => {
           active = false;
@@ -142,19 +131,11 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
         window.addEventListener("blur", neutral);
         document.addEventListener("visibilitychange", visibility);
         canvas.addEventListener("webglcontextlost", contextLost);
-        togglePlayback.current = () => {
-          paused = !paused;
-          setBackground(paused ? "paused" : "running");
-          updatePlayback();
-        };
-        setBackground(paused ? "paused" : "running");
-        updatePlayback();
+        visibility();
       } catch {
         if (generation !== currentGeneration) return;
         dispose?.();
         dispose = undefined;
-        togglePlayback.current = null;
-        setBackground("static");
       }
     };
     const motionChange = () => { void configure(); };
@@ -163,7 +144,6 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
     return () => {
       generation++;
       motion.removeEventListener("change", motionChange);
-      togglePlayback.current = null;
       dispose?.();
     };
   }, []);
@@ -172,13 +152,6 @@ export default function LivingPaper({ children }: { children: ReactNode }) {
     <>
       <canvas ref={canvasRef} className="living-paper" aria-hidden="true" />
       <div className="living-content">{children}</div>
-      <div className="background-control">
-        {(background === "running" || background === "paused") && (
-          <button type="button" onClick={() => togglePlayback.current?.()}>
-            {background === "paused" ? "Resume background" : "Pause background"}
-          </button>
-        )}
-      </div>
     </>
   );
 }

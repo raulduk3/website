@@ -41,7 +41,7 @@ The check runs ESLint, TypeScript, a production build, and browser tests against
 
 Vercel uses `npm ci` from `vercel.json` to install the versions in `package-lock.json`.
 
-Browser tests cover project links, native previews, keyboard access, clipboard feedback, reduced motion, stationary text, and document downloads. They check accessibility and overflow at 320, 390, 768, and 1440 pixels.
+Browser tests cover project links, native previews, keyboard access, clipboard feedback, paper motion, reduced motion, stationary text, and document downloads. They check accessibility and overflow at 320, 390, 768, and 1440 pixels.
 
 Set `PORTFOLIO_BROWSER_PATH` to use an existing Chromium executable. Set `PORTFOLIO_TEST_URL` to test an existing server.
 

@@ -81,7 +81,7 @@ test("the page and native previews work without JavaScript", async ({
       page.locator('a[href="/Richard_Alvarez_CV.pdf"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /Pause background|Copy email address/ }),
+      page.getByRole("button", { name: "Copy email address", exact: true }),
     ).toHaveCount(0);
   } finally {
     await context.close();
@@ -130,14 +130,25 @@ test("clipboard refusal preserves a usable email fallback", async ({
   ).toBeVisible();
 });
 
-test("background motion can stop and never moves the text", async ({
+test("paper animates behind stationary text without a pause control", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   const main = page.getByRole("main");
   await expect(main).toBeVisible();
+  const sample = () =>
+    page.screenshot({ clip: { x: 36, y: 150, width: 256, height: 320 } });
+  const initial = await sample();
+  await expect
+    .poll(async () => !(await sample()).equals(initial), { timeout: 10_000 })
+    .toBe(true);
+  const animated = await sample();
+  await expect
+    .poll(async () => !(await sample()).equals(animated), { timeout: 10_000 })
+    .toBe(true);
   await page.mouse.move(5, 5);
   await page.waitForTimeout(500);
   const before = await main.boundingBox();
@@ -147,18 +158,15 @@ test("background motion can stop and never moves the text", async ({
   if (!before || !after)
     throw new Error("The main content must have a visible bounding box.");
   expect({ x: after.x, y: after.y }).toEqual({ x: before.x, y: before.y });
-  await page
-    .getByRole("button", { name: "Pause background", exact: true })
-    .click();
   await expect(
-    page.getByRole("button", { name: "Resume background", exact: true }),
+    page.getByRole("button", { name: "Copy email address", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Resume background", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Pause background", exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole("button")).toHaveCount(1);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator("canvas")).toBeHidden();
+  const staticPaper = await sample();
+  await page.waitForTimeout(350);
+  expect((await sample()).equals(staticPaper)).toBe(true);
 });
 
 test("reduced motion keeps the background static", async ({ page }) => {
@@ -206,7 +214,9 @@ test("serves the existing documents and correct portfolio metadata", async ({
     /Richard Álvarez.*Web Developer.*AI Engineer/i,
   );
   expect(
-    await page.locator('link[rel="canonical"]').evaluate((element: HTMLLinkElement) => element.href),
+    await page
+      .locator('link[rel="canonical"]')
+      .evaluate((element: HTMLLinkElement) => element.href),
   ).toBe("https://richardalvarez.info/");
   for (const path of [
     "/Richard_Alvarez_Resume.pdf",

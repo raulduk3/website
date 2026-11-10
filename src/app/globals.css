@@ -138,25 +138,10 @@ footer {
   z-index: 1;
 }
 
-.background-control {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #626158;
-}
-
-.background-control button {
-  min-height: 44px;
-  padding: 8px;
-}
-
-.copy-email button:hover,
-.background-control button:hover {
+.copy-email button:hover {
   color: #292923;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .living-paper, .background-control { display: none; }
+  .living-paper { display: none; }
 }
