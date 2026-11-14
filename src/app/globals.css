@@ -75,12 +75,23 @@ a {
   text-decoration: none;
 }
 
-.link-label,
-.copy-email button {
-  text-decoration-line: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  text-decoration-skip-ink: auto;
+.link-label {
+  display: inline-block;
+  max-width: 100%;
+  line-height: 1.25;
+  padding-bottom: 0.25em;
+  background-image: linear-gradient(
+    to right,
+    rgb(41 41 35 / 35%),
+    rgb(41 41 35 / 55%) 30%,
+    rgb(41 41 35 / 40%) 65%,
+    rgb(41 41 35 / 50%)
+  );
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 a:hover,
@@ -129,6 +140,7 @@ summary:focus-visible {
 }
 
 .project-link {
+  align-items: baseline;
   gap: 0.3em;
 }
 
