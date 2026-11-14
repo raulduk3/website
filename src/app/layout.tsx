@@ -4,7 +4,10 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const avenir = localFont({
-  src: [{ path: "../../public/fonts/Avenir-Roman-12.ttf", weight: "400", style: "normal" }],
+  src: [
+    { path: "../../public/fonts/Avenir-Roman-12.ttf", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Avenir-Heavy-05.ttf", weight: "700", style: "normal" },
+  ],
   variable: "--font-avenir",
 });
 
@@ -52,12 +55,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={avenir.className + " flex flex-col bg-paper text-ink min-h-[100svh]"}>
+      <body className={avenir.className}>
         <a href="#main-content" className="skip-link">Skip to content</a>
-        <div className="flex-1 flex flex-col justify-center items-center w-full px-4">
-          {children}
-        </div>
-        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-6 py-4 text-center text-sm text-muted">
+        {children}
+        <footer>
           <p>Richard Alvarez © {new Date().getFullYear()}</p>
         </footer>
         <Analytics />

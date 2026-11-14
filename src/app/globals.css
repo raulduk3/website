@@ -14,20 +14,77 @@ body {
   margin: 0;
   background: #f5f2e9;
   color: #292923;
-  font-size: clamp(17px, 16px + 0.25vw, 18px);
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-::selection {
-  background: #ded9cb;
-  color: #292923;
+main,
+footer {
+  width: min(24rem, calc(100% - 40px));
+  margin-inline: auto;
+}
+
+main {
+  padding-top: 32px;
+}
+
+header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+h1,
+h2 {
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+header p {
+  margin-top: 4px;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.introduction p + p {
+  margin-top: 12px;
+}
+
+main > section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #d5d0c4;
+}
+
+h2 {
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-weight: 400;
 }
 
 a {
+  color: #292923;
   text-decoration: none;
 }
 
-a:hover {
+.link-label,
+.copy-email button {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+}
+
+a:hover,
+.copy-email button:hover {
   color: #626158;
 }
 
@@ -36,14 +93,13 @@ button:focus-visible,
 summary:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 5px;
-  border-radius: 2px;
 }
 
 .skip-link {
   position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 2;
+  top: max(12px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  z-index: 10;
   padding: 8px 12px;
   background: #f5f2e9;
   transform: translateY(calc(-100% - 20px));
@@ -55,21 +111,21 @@ summary:focus-visible {
 
 .project-list {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .project-heading {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  column-gap: 12px;
+  column-gap: 8px;
 }
 
 .project-link,
 .contact-link {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 32px;
 }
 
 .project-link {
@@ -78,7 +134,8 @@ summary:focus-visible {
 
 .contact-link {
   display: block;
-  padding-block: 8px;
+  width: fit-content;
+  padding-block: 4px;
   max-width: 100%;
   overflow-wrap: anywhere;
 }
@@ -88,13 +145,13 @@ summary:focus-visible {
 .project-disclosure,
 .copy-email {
   color: #626158;
-  font-size: 0.875em;
+  font-size: 0.875rem;
 }
 
 .project-disclosure summary {
   width: fit-content;
-  min-height: 44px;
-  padding-block: 10px;
+  min-height: 32px;
+  padding-block: 5px;
   cursor: pointer;
 }
 
@@ -102,11 +159,13 @@ summary:focus-visible {
   width: 100%;
   height: auto;
   margin-block: 4px 12px;
-  border: 1px solid #ded9cb;
+  border: 1px solid #d5d0c4;
 }
 
 .copy-email button {
-  min-height: 44px;
+  min-height: 32px;
+  padding-block: 5px;
+  color: #292923;
   text-align: left;
 }
 
@@ -118,30 +177,9 @@ summary:focus-visible {
   margin-bottom: 8px;
 }
 
-.living-paper {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.living-content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-}
-
 footer {
-  position: relative;
-  z-index: 1;
-}
-
-.copy-email button:hover {
-  color: #292923;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .living-paper { display: none; }
+  margin-block: 24px 32px;
+  color: #626158;
+  font-size: 0.875rem;
+  text-align: center;
 }
