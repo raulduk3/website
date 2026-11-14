@@ -9,6 +9,8 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
 
 # next.js
 /.next/
@@ -39,3 +41,4 @@ next-env.d.ts
 # vscode
 /.vscode/
 *.code-workspace
+.env*
