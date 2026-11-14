@@ -27,7 +27,7 @@ export default function CopyEmailButton({ email }: { email: string }) {
   return (
     <div className="copy-email">
       <button type="button" onClick={copyEmail} disabled={status === "copying"}>
-        Copy email address
+        <span className="link-label">Copy email address</span>
       </button>
       <p role="status">
         {status === "copied" && "Email address copied."}
